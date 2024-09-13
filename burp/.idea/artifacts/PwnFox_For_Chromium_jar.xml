@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="PwnFox-For-Chromium:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PwnFox_For_Chromium_jar</output-path>
+    <root id="archive" name="PwnFox-For-Chromium.jar">
+      <element id="module-output" name="PwnFox-For-Chromium" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/portswigger/burp/extensions/montoya-api/2024.7/montoya-api-2024.7.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

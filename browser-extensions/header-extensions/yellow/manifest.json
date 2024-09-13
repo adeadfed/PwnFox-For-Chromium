@@ -1,0 +1,14 @@
+{
+    "manifest_version": 3,
+    "name": "X-PwnFox-Color Header Extension",
+    "version": "1.0",
+    "permissions": [
+        "declarativeNetRequest"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    }
+}

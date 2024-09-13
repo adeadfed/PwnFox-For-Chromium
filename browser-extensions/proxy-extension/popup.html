@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proxy Settings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            width: 250px;
+            padding: 10px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input {
+            padding: 5px;
+            width: 100%;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 5px;
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #toggleButton {
+            background-color: #f44336;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Proxy Settings</h1>
+    <form id="proxyForm">
+        <label for="scheme">Scheme (http/https):</label>
+        <input type="text" id="scheme" name="scheme" placeholder="http" required>
+
+        <label for="host">Proxy Host:</label>
+        <input type="text" id="host" name="host" placeholder="127.0.0.1" required>
+
+        <label for="port">Proxy Port:</label>
+        <input type="number" id="port" name="port" placeholder="8080" required>
+
+        <label for="bypass">Bypass List (comma-separated):</label>
+        <input type="text" id="bypass" name="bypass" placeholder="localhost">
+
+        <button type="submit">Save</button>
+    </form>
+
+    <button id="toggleButton">Disable Proxy</button>
+    <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+{
+    "name": "PwnFox - Pink",
+    "version": "1.0",
+    "description": "ThemeBeta.com",
+    "manifest_version": 3,
+    "theme": {
+        "colors": {
+            "frame": [
+                255,
+                75,
+                218
+            ],
+            "toolbar": [
+                255,
+                255,
+                255
+            ],
+            "tab_text": [
+                60,
+                64,
+                67
+            ],
+            "tab_background_text": [
+                60,
+                64,
+                67
+            ],
+            "bookmark_text": [
+                60,
+                64,
+                67
+            ],
+            "ntp_background": [
+                255,
+                255,
+                255
+            ],
+            "ntp_text": [
+                0,
+                0,
+                0
+            ],
+            "ntp_link": [
+                6,
+                55,
+                116
+            ],
+            "button_background": [
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        "tints": {
+            "buttons": [
+                0,
+                0,
+                0.44
+            ]
+        },
+        "properties": {
+            "ntp_background_alignment": "bottom",
+            "ntp_background_repeat": "no-repeat"
+        }
+    }
+}

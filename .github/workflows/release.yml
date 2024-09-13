@@ -1,0 +1,39 @@
+name: Create release w/ artifacts
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build-artifacts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: adopt
+          java-version: '21'
+
+      - name: Build BurpSuite JAR
+        run: |
+          cd burp/
+          mvn clean compile assembly:single
+          ls -l
+
+      - name: Build Chromium extensions ZIP
+        run: |
+          zip -r browser-extensions.zip browser-extensions
+      
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            burp/target/*.jar
+            browser-extensions.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   

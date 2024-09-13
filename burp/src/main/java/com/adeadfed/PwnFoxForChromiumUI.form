@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.adeadfed.PwnFoxForChromiumUI">
+  <grid id="27dc6" binding="ui" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="30" left="30" bottom="30" right="30"/>
+    <constraints>
+      <xy x="20" y="20" width="969" height="670"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="1eef8" binding="settingsPanel" layout-manager="GridLayoutManager" row-count="8" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="20" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="9c7a8" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <labelFor value="83512"/>
+              <text value="Path to the Chromium executable"/>
+            </properties>
+          </component>
+          <component id="83512" class="javax.swing.JTextField" binding="pwnChromeExePath">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <editable value="true"/>
+              <enabled value="true"/>
+            </properties>
+          </component>
+          <component id="3db82" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <labelFor value="b1188"/>
+              <text value="Path to the PwnFox For Chromium extensions directory"/>
+            </properties>
+          </component>
+          <component id="b1188" class="javax.swing.JTextField" binding="pwnChromeExtensionsPath">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <editable value="true"/>
+              <enabled value="true"/>
+            </properties>
+          </component>
+          <component id="16506" class="javax.swing.JButton" binding="chooseExtDirButton">
+            <constraints>
+              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Choose..."/>
+            </properties>
+          </component>
+          <component id="becde" class="javax.swing.JButton" binding="chooseExeButton">
+            <constraints>
+              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Choose..."/>
+            </properties>
+          </component>
+          <vspacer id="c0b56">
+            <constraints>
+              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </vspacer>
+          <hspacer id="4795d">
+            <constraints>
+              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </hspacer>
+          <component id="6f147" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font size="22" style="1"/>
+              <text value="Settings"/>
+            </properties>
+          </component>
+          <component id="d33ca" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <labelFor value="82d6f"/>
+              <text value="Path to the PwnFox For Chromium profile data directory"/>
+            </properties>
+          </component>
+          <component id="82d6f" class="javax.swing.JTextField" binding="pwnChromeProfilesPath">
+            <constraints>
+              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <editable value="true"/>
+              <enabled value="true"/>
+            </properties>
+          </component>
+          <component id="a1ef8" class="javax.swing.JButton" binding="chooseProfilesDirButton">
+            <constraints>
+              <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Choose..."/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="f2493" binding="buttonsPanel" layout-manager="GridLayoutManager" row-count="2" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="6e2d8" class="javax.swing.JButton" binding="blueButton" default-binding="true">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="2" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="100"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-12866049"/>
+              <borderPainted value="true"/>
+              <contentAreaFilled value="true"/>
+              <focusPainted value="false"/>
+              <font size="16" style="1"/>
+              <foreground color="-1"/>
+              <name value="Blue"/>
+              <text value="Blue"/>
+            </properties>
+          </component>
+          <component id="5c41c" class="javax.swing.JButton" binding="cyanButton">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="100"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-13973606"/>
+              <font size="16" style="1"/>
+              <foreground color="-1"/>
+              <name value="Cyan"/>
+              <text value="Cyan"/>
+            </properties>
+          </component>
+          <component id="ff3db" class="javax.swing.JButton" binding="greenButton" default-binding="true">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="100"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-11416320"/>
+              <font size="16" style="1"/>
+              <foreground color="-1"/>
+              <name value="Green"/>
+              <text value="Green"/>
+            </properties>
+          </component>
+          <component id="a2b69" class="javax.swing.JButton" binding="yellowButton">
+            <constraints>
+              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="100"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-210176"/>
+              <font size="16" style="1"/>
+              <foreground color="-1"/>
+              <label value="Yellow"/>
+              <name value="Yellow"/>
+              <text value="Yellow"/>
+            </properties>
+          </component>
+          <component id="3f30" class="javax.swing.JButton" binding="orangeButton" default-binding="true">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="100"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-24551"/>
+              <font size="16" style="1"/>
+              <foreground color="-1"/>
+              <name value="Orange"/>
+              <text value="Orange"/>
+            </properties>
+          </component>
+          <component id="912c2" class="javax.swing.JButton" binding="redButton" default-binding="true">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="100"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-40369"/>
+              <borderPainted value="true"/>
+              <font size="16" style="1"/>
+              <foreground color="-1"/>
+              <name value="Red"/>
+              <text value="Red"/>
+            </properties>
+          </component>
+          <component id="b456b" class="javax.swing.JButton" binding="pinkButton" default-binding="true">
+            <constraints>
+              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="100"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-46118"/>
+              <font size="16" style="1"/>
+              <foreground color="-1"/>
+              <name value="Pink"/>
+              <text value="Pink"/>
+            </properties>
+          </component>
+          <component id="8a1c8" class="javax.swing.JButton" binding="magentaButton">
+            <constraints>
+              <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="100"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-5213199"/>
+              <font size="16" style="1"/>
+              <foreground color="-1"/>
+              <name value="Magenta"/>
+              <text value="Magenta"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <component id="61919" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font size="22" style="1"/>
+          <text value="PwnChromium Profiles"/>
+        </properties>
+      </component>
+      <vspacer id="4cf07">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </vspacer>
+    </children>
+  </grid>
+</form>
