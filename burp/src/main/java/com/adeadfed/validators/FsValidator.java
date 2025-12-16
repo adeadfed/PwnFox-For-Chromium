@@ -1,5 +1,7 @@
 package com.adeadfed.validators;
 
+import com.adeadfed.common.OsType;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -17,7 +19,7 @@ public class FsValidator {
         }
         // check if the --version flag of the chromium executable returns Chrome or Chromium in the output
         // a more robust check if this is actually a Chromium exe
-        if (System.getProperty("os.name").startsWith("Windows")) {
+        if (OsType.isWindows()) {
             // skip this check on Windows cause apparently Chrome.exe does not have --version flag
             return true;
         }
