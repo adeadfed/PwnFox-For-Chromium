@@ -1,0 +1,26 @@
+<p>PwnFox For Chromium integrates the core features of the original PwnFox extension into Chromium-based browsers, enabling efficient multi-session web security testing. It facilitates seamless interaction between Chromium and Burp Suite, offering color-coded traffic visualization and streamlined profile management for enhanced testing workflows.</p>
+
+<h2>Features</h2>
+<ul>
+  <li>Launch Chromium profiles directly from Burp Suite</li>
+  <li>Support for up to 8 isolated browser profiles</li>
+  <li>Color-coded traffic based on profile</li>
+  <li>Each profile can be assigned a custom name to track it more easily</li>
+  <li>Persistent configuration and session data</li>
+</ul>
+
+<h2>Usage</h2>
+<ol>
+  <li>Open the extension's tab within Burp Suite.</li>
+  <li>Set the path to your Chromium executable:
+    <ul>
+      <li>On most systems, this is typically <code class="InlineCode">/usr/bin/chromium</code>, <code class="InlineCode">/Applications/Chromium.app/Contents/MacOS/Chromium</code>, or the equivalent for your OS.</li>
+      <li>If using Burp Suite's built-in browser, the Chromium binary can usually be found in the <code class="InlineCode">burpbrowser</code> folder.</li>
+    </ul>
+  </li>
+  <li>Optionally, define a custom directory for profile data to keep session files separate across projects.</li>
+  <li>Click a profile button to launch a Chromium instance tied to that profile. Each profile uses a distinct user data directory, maintaining separate cookies, sessions, and history.</li>
+  <li>Inside the browser, use the included Proxy Settings Editor to configure proxy behavior. This allows fine-grained control and ensures traffic flows correctly through Burp Suite.</li>
+  <li>Burp Suite will automatically highlight HTTP traffic in the Proxy tab using the color theme associated with the active profile, making it easy to distinguish traffic sources.</li>
+  <li>All configurations persist across restarts, so you only need to set things up once.</li>
+</ol>
