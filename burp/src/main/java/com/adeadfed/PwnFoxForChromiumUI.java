@@ -16,6 +16,9 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.InputEvent;
 import java.util.Locale;
 
 public class PwnFoxForChromiumUI {
@@ -35,6 +38,7 @@ public class PwnFoxForChromiumUI {
     private JButton orangeButton;
     private JButton pinkButton;
     private JButton magentaButton;
+    private JLabel helpLabel;
 
     public JPanel getUI() {
         return ui;
@@ -66,7 +70,7 @@ public class PwnFoxForChromiumUI {
             try {
                 Process process = browser.start();
                 pwnChromiumExtension.montoyaApi.logging().logToOutput(
-                    String.format("PwnChromium %s started with PID: %d", themeColor, process.pid())
+                        String.format("PwnChromium %s started with PID: %d", themeColor, process.pid())
                 );
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "An error launching PwnChromium has occurred. Check the extension logs");
@@ -90,13 +94,96 @@ public class PwnFoxForChromiumUI {
         };
 
         ActionListener profileActionListener = e -> {
-            String themeColor = e.getActionCommand();
-            uiStartDetachedPwnChromium(themeColor);
+            JButton buttonPressed = (JButton) e.getSource();
+
+            // Check if Ctrl/Command key was pressed
+            boolean ctrlDown = (e.getModifiers() & InputEvent.CTRL_MASK) != 0
+                    || (e.getModifiers() & InputEvent.META_MASK) != 0; // Command key
+
+            if (ctrlDown) {
+                // Ctrl/Command + Click: rename button
+                pwnChromiumExtension.montoyaApi.logging().logToOutput("About to start inline edit");
+                startInlineEdit(buttonPressed);
+            } else {
+                // Regular click: launch Chromium
+                String themeColor = buttonPressed.getName();
+                pwnChromiumExtension.montoyaApi.logging().logToOutput("About to start chromium: " + themeColor);
+                uiStartDetachedPwnChromium(themeColor);
+            }
         };
 
         for (JButton b : profileButtons) {
             b.addActionListener(profileActionListener);
         }
+    }
+
+    /**
+     * Replace a JButton with a temporary text field so the label can be edited.
+     */
+    private void startInlineEdit(JButton button) {
+        Container parent = button.getParent();
+        if (parent == null) return;
+
+        // Grab the same layout constraints IntelliJ uses
+        GridLayoutManager layout = null;
+        GridConstraints constraints = null;
+        if (parent.getLayout() instanceof GridLayoutManager gLayout) {
+            layout = gLayout;
+            constraints = layout.getConstraintsForComponent(button);
+        }
+
+        JTextField editor = new JTextField(button.getText());
+        editor.setFont(button.getFont());
+        editor.setForeground(button.getForeground());
+        editor.setBackground(button.getBackground());
+        editor.setBorder(button.getBorder());
+        editor.setOpaque(true);
+        editor.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // replace within container
+        parent.remove(button);
+        if (layout != null && constraints != null) {
+            parent.add(editor, constraints);   // preserve grid cell and sizing
+        } else {
+            parent.add(editor);  // fallback for non‑designer layout
+        }
+        parent.revalidate();
+        parent.repaint();
+
+        // focus after layout
+        SwingUtilities.invokeLater(() -> {
+            editor.requestFocusInWindow();
+            editor.selectAll();
+        });
+
+        // Inline commit handler
+        final GridLayoutManager layoutFinal = layout;
+        final GridConstraints constraintsFinal = constraints;
+        Runnable commit = () -> {
+            String newText = editor.getText().trim();
+            if (!newText.isEmpty()) {
+                button.setText(newText);
+            }
+            parent.remove(editor);
+            if (layoutFinal != null && constraintsFinal != null) {
+                parent.add(button, constraintsFinal);
+            } else {
+                parent.add(button);
+            }
+            parent.revalidate();
+            parent.repaint();
+        };
+
+        // save when Enter is pressed
+        editor.addActionListener(e -> commit.run());
+
+        // save when focus is lost
+        editor.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                commit.run();
+            }
+        });
     }
 
     private void setPwnChromiumExtension(PwnFoxForChromium extension) {
@@ -124,6 +211,11 @@ public class PwnFoxForChromiumUI {
         );
 
         setupProfileButtons();
+
+        // Detect platform and set label text
+        String modifierKey = System.getProperty("os.name").toLowerCase().contains("mac")
+                ? "⌘" : "Ctrl";
+        helpLabel.setText(modifierKey + " + Click to edit button names");
     }
 
     {
@@ -143,10 +235,10 @@ public class PwnFoxForChromiumUI {
     private void $$$setupUI$$$() {
         Color white = new Color(-1);
         ui = new JPanel();
-        ui.setLayout(new GridLayoutManager(4, 1, new Insets(30, 30, 30, 30), -1, -1));
+        ui.setLayout(new GridLayoutManager(4, 2, new Insets(30, 30, 30, 30), -1, -1));
         settingsPanel = new JPanel();
-        settingsPanel.setLayout(new GridLayoutManager(8, 3, new Insets(20, 0, 0, 0), -1, -1));
-        ui.add(settingsPanel, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        settingsPanel.setLayout(new GridLayoutManager(6, 3, new Insets(20, 0, 0, 0), -1, -1));
+        ui.add(settingsPanel, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JLabel label1 = new JLabel();
         label1.setText("Path to the Chromium executable");
         settingsPanel.add(label1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -158,27 +250,27 @@ public class PwnFoxForChromiumUI {
         chooseExeButton.setText("Choose...");
         settingsPanel.add(chooseExeButton, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
-        settingsPanel.add(spacer1, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        settingsPanel.add(spacer1, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
         settingsPanel.add(spacer2, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        final JLabel label2 = new JLabel();
+        Font label2Font = this.$$$getFont$$$(null, Font.BOLD, 22, label2.getFont());
+        if (label2Font != null) label2.setFont(label2Font);
+        label2.setText("Settings");
+        settingsPanel.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label3 = new JLabel();
-        Font label3Font = this.$$$getFont$$$(null, Font.BOLD, 22, label3.getFont());
-        if (label3Font != null) label3.setFont(label3Font);
-        label3.setText("Settings");
-        settingsPanel.add(label3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label4 = new JLabel();
-        label4.setText("Path to the PwnFox For Chromium profile data directory");
-        settingsPanel.add(label4, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        label3.setText("Path to the PwnFox For Chromium profile data directory");
+        settingsPanel.add(label3, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         pwnChromeProfilesPath = new JTextField();
         pwnChromeProfilesPath.setEditable(true);
         pwnChromeProfilesPath.setEnabled(true);
-        settingsPanel.add(pwnChromeProfilesPath, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        settingsPanel.add(pwnChromeProfilesPath, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         chooseProfilesDirButton = new JButton();
         chooseProfilesDirButton.setText("Choose...");
-        settingsPanel.add(chooseProfilesDirButton, new GridConstraints(6, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        settingsPanel.add(chooseProfilesDirButton, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new GridLayoutManager(2, 4, new Insets(0, 0, 0, 0), -1, -1));
-        ui.add(buttonsPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        ui.add(buttonsPanel, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         blueButton = new JButton();
         blueButton.setBackground(ProfileColors.BLUE.getColor());
         blueButton.setBorderPainted(true);
@@ -247,15 +339,18 @@ public class PwnFoxForChromiumUI {
         magentaButton.setName("Magenta");
         magentaButton.setText("Magenta");
         buttonsPanel.add(magentaButton, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 100), null, 0, false));
-        final JLabel label5 = new JLabel();
-        Font label5Font = this.$$$getFont$$$(null, Font.BOLD, 22, label5.getFont());
-        if (label5Font != null) label5.setFont(label5Font);
-        label5.setText("PwnChromium Profiles");
-        ui.add(label5, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label4 = new JLabel();
+        Font label4Font = this.$$$getFont$$$(null, Font.BOLD, 22, label4.getFont());
+        if (label4Font != null) label4.setFont(label4Font);
+        label4.setText("PwnChromium Profiles");
+        ui.add(label4, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer3 = new Spacer();
-        ui.add(spacer3, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        ui.add(spacer3, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        helpLabel = new JLabel();
+        helpLabel.setText("Ctrl+Click to edit button names");
+        ui.add(helpLabel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         label1.setLabelFor(pwnChromeExePath);
-        label4.setLabelFor(pwnChromeProfilesPath);
+        label3.setLabelFor(pwnChromeProfilesPath);
     }
 
     /**
