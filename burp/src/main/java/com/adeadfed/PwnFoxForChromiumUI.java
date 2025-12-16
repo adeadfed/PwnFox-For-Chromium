@@ -147,7 +147,7 @@ public class PwnFoxForChromiumUI {
             try {
                 Process process = browser.start();
                 pwnChromiumExtension.montoyaApi.logging().logToOutput(
-                        String.format("PwnChromium %s started with PID: %d", profileColor, process.pid())
+                    String.format("PwnChromium %s started with PID: %d", profileColor, process.pid())
                 );
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "An error launching PwnChromium has occurred. Check the extension logs");

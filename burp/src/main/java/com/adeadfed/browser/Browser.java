@@ -60,7 +60,10 @@ public class Browser {
 
     public Process start() throws Exception {
         ProcessBuilder processBuilder = new ProcessBuilder(getArgs());
-        return processBuilder.start();
+        Process process = processBuilder.start();
+        // ensure browser is closed when burp is exited
+        Runtime.getRuntime().addShutdownHook(new Thread(process::destroy));
+        return process;
     }
 
     private String[] getArgs() throws Exception {
