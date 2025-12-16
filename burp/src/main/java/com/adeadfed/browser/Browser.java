@@ -5,6 +5,7 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+import com.adeadfed.common.OsType;
 import com.adeadfed.common.ProfileColors;
 import com.adeadfed.browser_extensions.BrowserExtensionsLoader;
 
@@ -68,24 +69,39 @@ public class Browser {
 
     private String[] getArgs() throws Exception {
         return concatAll(
-                new String[] { exePath },
+                getExeArgs(),
                 PWNCHROME_DEFAULT_ARGS,
                 getProfileArgs(),
-                new String[] { getExtensionsArgs() }
+                getExtensionsArgs()
         );
     }
 
-    private String getExtensionsArgs() throws IOException {
+    private String[] getExeArgs() {
+        if (OsType.isMacOS()) {
+            // this should prevent icons from being treated as separate instances in the dock
+            return new String[] {
+                "open",
+                "-a",
+                exePath,
+                "-n",
+                "--args"
+            };
+        }
+        return new String[] { exePath };
+    } 
+
+    private String[] getExtensionsArgs() throws IOException {
         BrowserExtensionsLoader browserExtensions = new BrowserExtensionsLoader(
                 profilesPath,
                 ProfileColors.valueOf(profileColor.toUpperCase())
         );
-        return "--load-extension=" + String.join(
+        return new String[] {
+            "--load-extension=" + String.join(
                 ",",
                 browserExtensions.getHeaderExtensionDir(),
                 browserExtensions.getProxyExtensionDir(),
                 browserExtensions.getThemeDir()
-        );
+        )};
     }
 
     private String[] getProfileArgs() throws InvalidPathException {
