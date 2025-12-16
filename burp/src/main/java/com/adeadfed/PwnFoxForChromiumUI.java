@@ -20,7 +20,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.InputEvent;
 import java.util.Locale;
 
 public class PwnFoxForChromiumUI {
@@ -69,22 +68,23 @@ public class PwnFoxForChromiumUI {
                 redButton, orangeButton, pinkButton, magentaButton
         };
 
-        ActionListener profileActionListener = e -> {
-            JButton buttonPressed = (JButton) e.getSource();
+
+        ActionListener buttonPressedListener = e -> {
+            JButton button = (JButton) e.getSource();
 
             if (isRenameKeyPressed(e)) {
-                pwnChromiumExtension.montoyaApi.logging().logToOutput("About to start inline edit");
-                uiRenameProfileInline(buttonPressed);
+                pwnChromiumExtension.montoyaApi.logging().logToOutput("Editing the button name...");
+                uiRenameProfileButtonInline(button);
             } else {
-                // TODO: fix this
-                // String themeColor = buttonPressed.getName();
-                // pwnChromiumExtension.montoyaApi.logging().logToOutput("About to start chromium: " + themeColor);
-                // uiStartDetachedPwnChromium(buttonPressed);
+                String profileColor = button.getName();
+                pwnChromiumExtension.montoyaApi.logging().logToOutput("Launching PwnChromium... profile - " + profileColor);
+                uiStartDetachedPwnChromium(profileColor);
             }
         };
 
         for (JButton b : profileButtons) {
-            b.addActionListener(profileActionListener);
+            b.setText(pwnChromiumExtension.pwnChromiumPreferences.getProfileName(b.getName()));
+            b.addActionListener(buttonPressedListener);
         }
     }
 
@@ -104,14 +104,14 @@ public class PwnFoxForChromiumUI {
     private boolean isRenameKeyPressed(ActionEvent e) {
         int RENAME_KEY_MASK = OsType.isMacOS() ? 
             ActionEvent.META_MASK : ActionEvent.CTRL_MASK;
-
+    
         return (e.getModifiers() & RENAME_KEY_MASK) != 0;
     }
 
     /**
      * Replace a JButton with a temporary text field so the label can be edited.
      */
-    private void uiRenameProfileInline(JButton button) {
+    private void uiRenameProfileButtonInline(JButton button) {
         Container parent = button.getParent();
         if (parent == null) return;
 
@@ -177,15 +177,15 @@ public class PwnFoxForChromiumUI {
         });
     }
 
-    private void uiStartDetachedPwnChromium(String themeColor) {
+    private void uiStartDetachedPwnChromium(String profileColor) {
         if (areSettingsValid()) {
             String chromiumExePath = pwnChromeExePath.getText();
             String chromiumProfilesPath = pwnChromeProfilesPath.getText();
-            Browser browser = new Browser(chromiumExePath, chromiumProfilesPath, themeColor);
+            Browser browser = new Browser(chromiumExePath, chromiumProfilesPath, profileColor);
             try {
                 Process process = browser.start();
                 pwnChromiumExtension.montoyaApi.logging().logToOutput(
-                        String.format("PwnChromium %s started with PID: %d", themeColor, process.pid())
+                        String.format("PwnChromium %s started with PID: %d", profileColor, process.pid())
                 );
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "An error launching PwnChromium has occurred. Check the extension logs");

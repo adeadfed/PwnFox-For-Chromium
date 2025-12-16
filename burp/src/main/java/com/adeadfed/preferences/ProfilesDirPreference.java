@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class ProfilesDirPreference extends Preference {
-    private final String persistentKey = "PWNFOX_PROFILES_DIR";
+    private final String persistentKey = "PWNCHROMIUM_PROFILES_DIR";
 
     @Override
     public String getPersistentKey() {

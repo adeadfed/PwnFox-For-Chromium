@@ -8,7 +8,7 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 
 public class BrowserPathPreference extends Preference {
-    private final String persistentKey = "PWNFOX_BROWSER_PATH";
+    private final String persistentKey = "PWNCHROMIUM_BROWSER_PATH";
 
     @Override
     public String getPersistentKey() {
