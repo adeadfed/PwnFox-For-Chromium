@@ -2,6 +2,7 @@ package com.adeadfed;
 
 import com.adeadfed.preferences.Preference;
 
+import com.adeadfed.common.OsType;
 import com.adeadfed.common.ProfileColors;
 import com.adeadfed.browser.Browser;
 import com.adeadfed.validators.FsValidator;
@@ -15,6 +16,7 @@ import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -44,39 +46,13 @@ public class PwnFoxForChromiumUI {
         return ui;
     }
 
-    private void uiChoosePath(Preference preference, JTextField uiPath, int pathMode) {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(pathMode);
-        int result = fileChooser.showOpenDialog(null);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            String path = fileChooser.getSelectedFile().getAbsolutePath();
-            pwnChromiumExtension.pwnChromiumPreferences.set(preference, path);
-            uiPath.setText(path);
-        } else {
-            JOptionPane.showMessageDialog(null, "Nothing selected!");
-        }
+    private void setPwnChromiumExtension(PwnFoxForChromium extension) {
+        this.pwnChromiumExtension = extension;
     }
 
-    private boolean areSettingsValid() {
-        return pwnChromeExePath.getInputVerifier().verify(pwnChromeExePath) &&
-                pwnChromeProfilesPath.getInputVerifier().verify(pwnChromeProfilesPath);
-    }
-
-    private void uiStartDetachedPwnChromium(String themeColor) {
-        if (areSettingsValid()) {
-            String chromiumExePath = pwnChromeExePath.getText();
-            String chromiumProfilesPath = pwnChromeProfilesPath.getText();
-            Browser browser = new Browser(chromiumExePath, chromiumProfilesPath, themeColor);
-            try {
-                Process process = browser.start();
-                pwnChromiumExtension.montoyaApi.logging().logToOutput(
-                        String.format("PwnChromium %s started with PID: %d", themeColor, process.pid())
-                );
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "An error launching PwnChromium has occurred. Check the extension logs");
-                pwnChromiumExtension.montoyaApi.logging().logToError(e);
-            }
-        }
+    private void setupRenameHelpLabel() {
+        String modifierKey = OsType.isMacOS() ? "⌘" : "Ctrl";
+        helpLabel.setText(modifierKey + " + Click to edit button names");
     }
 
     private void setupPreferenceButton(Preference preference, JButton button, JTextField uiPath, int pathMode) {
@@ -96,19 +72,14 @@ public class PwnFoxForChromiumUI {
         ActionListener profileActionListener = e -> {
             JButton buttonPressed = (JButton) e.getSource();
 
-            // Check if Ctrl/Command key was pressed
-            boolean ctrlDown = (e.getModifiers() & InputEvent.CTRL_MASK) != 0
-                    || (e.getModifiers() & InputEvent.META_MASK) != 0; // Command key
-
-            if (ctrlDown) {
-                // Ctrl/Command + Click: rename button
+            if (isRenameKeyPressed(e)) {
                 pwnChromiumExtension.montoyaApi.logging().logToOutput("About to start inline edit");
-                startInlineEdit(buttonPressed);
+                uiRenameProfileInline(buttonPressed);
             } else {
-                // Regular click: launch Chromium
-                String themeColor = buttonPressed.getName();
-                pwnChromiumExtension.montoyaApi.logging().logToOutput("About to start chromium: " + themeColor);
-                uiStartDetachedPwnChromium(themeColor);
+                // TODO: fix this
+                // String themeColor = buttonPressed.getName();
+                // pwnChromiumExtension.montoyaApi.logging().logToOutput("About to start chromium: " + themeColor);
+                // uiStartDetachedPwnChromium(buttonPressed);
             }
         };
 
@@ -117,10 +88,30 @@ public class PwnFoxForChromiumUI {
         }
     }
 
+    private void uiChoosePath(Preference preference, JTextField uiPath, int pathMode) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(pathMode);
+        int result = fileChooser.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            String path = fileChooser.getSelectedFile().getAbsolutePath();
+            pwnChromiumExtension.pwnChromiumPreferences.set(preference, path);
+            uiPath.setText(path);
+        } else {
+            JOptionPane.showMessageDialog(null, "Nothing selected!");
+        }
+    }
+
+    private boolean isRenameKeyPressed(ActionEvent e) {
+        int RENAME_KEY_MASK = OsType.isMacOS() ? 
+            ActionEvent.META_MASK : ActionEvent.CTRL_MASK;
+
+        return (e.getModifiers() & RENAME_KEY_MASK) != 0;
+    }
+
     /**
      * Replace a JButton with a temporary text field so the label can be edited.
      */
-    private void startInlineEdit(JButton button) {
+    private void uiRenameProfileInline(JButton button) {
         Container parent = button.getParent();
         if (parent == null) return;
 
@@ -186,8 +177,26 @@ public class PwnFoxForChromiumUI {
         });
     }
 
-    private void setPwnChromiumExtension(PwnFoxForChromium extension) {
-        this.pwnChromiumExtension = extension;
+    private void uiStartDetachedPwnChromium(String themeColor) {
+        if (areSettingsValid()) {
+            String chromiumExePath = pwnChromeExePath.getText();
+            String chromiumProfilesPath = pwnChromeProfilesPath.getText();
+            Browser browser = new Browser(chromiumExePath, chromiumProfilesPath, themeColor);
+            try {
+                Process process = browser.start();
+                pwnChromiumExtension.montoyaApi.logging().logToOutput(
+                        String.format("PwnChromium %s started with PID: %d", themeColor, process.pid())
+                );
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "An error launching PwnChromium has occurred. Check the extension logs");
+                pwnChromiumExtension.montoyaApi.logging().logToError(e);
+            }
+        }
+    }
+
+    private boolean areSettingsValid() {
+        return pwnChromeExePath.getInputVerifier().verify(pwnChromeExePath) &&
+                pwnChromeProfilesPath.getInputVerifier().verify(pwnChromeProfilesPath);
     }
 
     public PwnFoxForChromiumUI(PwnFoxForChromium pwnChromiumExtension) {
@@ -211,11 +220,7 @@ public class PwnFoxForChromiumUI {
         );
 
         setupProfileButtons();
-
-        // Detect platform and set label text
-        String modifierKey = System.getProperty("os.name").toLowerCase().contains("mac")
-                ? "⌘" : "Ctrl";
-        helpLabel.setText(modifierKey + " + Click to edit button names");
+        setupRenameHelpLabel();
     }
 
     {
