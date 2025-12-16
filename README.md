@@ -10,6 +10,10 @@ PwnFox For Chromium allows you to:
 
 ![](readme/demo.gif)
 
+## New in 1.3.0!
+You can now rename your profile by Ctrl+Clicking on the button (Command+Click on MacOS).
+![](readme/profile-renaming.gif)
+
 ## Setup
 1. Download the up-to-date `PwnFox-For-Chromium.jar` from the [Releases](https://github.com/adeadfed/PwnFox-For-Chromium/releases) tab
 2. Import the PwnFox For Chromium JAR into the BurpSuite    
