@@ -21,7 +21,6 @@ jobs:
 
       - name: Build BurpSuite JAR
         run: |
-          cd burp/
           mvn clean compile assembly:single
           ls -l
 
@@ -29,6 +28,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            burp/target/*.jar
+            target/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
