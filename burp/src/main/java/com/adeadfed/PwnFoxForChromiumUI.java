@@ -1,7 +1,8 @@
 package com.adeadfed;
 
 import com.adeadfed.preferences.Preference;
-
+import com.adeadfed.profile_button.ButtonGridLayout;
+import com.adeadfed.profile_button.ButtonInlineEditor;
 import com.adeadfed.common.OsType;
 import com.adeadfed.common.ProfileColors;
 import com.adeadfed.browser.Browser;
@@ -18,8 +19,6 @@ import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.util.Locale;
 
 public class PwnFoxForChromiumUI {
@@ -112,69 +111,27 @@ public class PwnFoxForChromiumUI {
      * Replace a JButton with a temporary text field so the label can be edited.
      */
     private void uiRenameProfileButtonInline(JButton button) {
-        Container parent = button.getParent();
-        if (parent == null) return;
+        try {
+            ButtonGridLayout layout = ButtonGridLayout.layoutFrom(button);
+            JTextField inlineEditor = ButtonInlineEditor.fromButton(button);
 
-        // Grab the same layout constraints IntelliJ uses
-        GridLayoutManager layout = null;
-        GridConstraints constraints = null;
-        if (parent.getLayout() instanceof GridLayoutManager gLayout) {
-            layout = gLayout;
-            constraints = layout.getConstraintsForComponent(button);
+            layout.swapComponent(button, inlineEditor);
+
+            Runnable profileRenamedCallback = () -> {
+                String text = inlineEditor.getText().trim();
+                if (!text.isEmpty()) {
+                    button.setText(text);
+                    pwnChromiumExtension.pwnChromiumPreferences.setProfileName(button.getName(), text);
+                }
+                layout.swapComponent(inlineEditor, button);
+            };
+
+            ButtonInlineEditor.setupCallback(inlineEditor, profileRenamedCallback);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "An error editing the profile name has occurred. Check the extension logs");
+            pwnChromiumExtension.montoyaApi.logging().logToError(e);
         }
-
-        JTextField editor = new JTextField(button.getText());
-        editor.setFont(button.getFont());
-        editor.setForeground(button.getForeground());
-        editor.setBackground(button.getBackground());
-        editor.setBorder(button.getBorder());
-        editor.setOpaque(true);
-        editor.setHorizontalAlignment(SwingConstants.CENTER);
-
-        // replace within container
-        parent.remove(button);
-        if (layout != null && constraints != null) {
-            parent.add(editor, constraints);   // preserve grid cell and sizing
-        } else {
-            parent.add(editor);  // fallback for non‑designer layout
-        }
-        parent.revalidate();
-        parent.repaint();
-
-        // focus after layout
-        SwingUtilities.invokeLater(() -> {
-            editor.requestFocusInWindow();
-            editor.selectAll();
-        });
-
-        // Inline commit handler
-        final GridLayoutManager layoutFinal = layout;
-        final GridConstraints constraintsFinal = constraints;
-        Runnable commit = () -> {
-            String newText = editor.getText().trim();
-            if (!newText.isEmpty()) {
-                button.setText(newText);
-            }
-            parent.remove(editor);
-            if (layoutFinal != null && constraintsFinal != null) {
-                parent.add(button, constraintsFinal);
-            } else {
-                parent.add(button);
-            }
-            parent.revalidate();
-            parent.repaint();
-        };
-
-        // save when Enter is pressed
-        editor.addActionListener(e -> commit.run());
-
-        // save when focus is lost
-        editor.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                commit.run();
-            }
-        });
     }
 
     private void uiStartDetachedPwnChromium(String profileColor) {
