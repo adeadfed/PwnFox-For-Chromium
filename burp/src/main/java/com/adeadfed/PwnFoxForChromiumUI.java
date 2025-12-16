@@ -67,17 +67,14 @@ public class PwnFoxForChromiumUI {
                 redButton, orangeButton, pinkButton, magentaButton
         };
 
-
         ActionListener buttonPressedListener = e -> {
             JButton button = (JButton) e.getSource();
-
             if (isRenameKeyPressed(e)) {
                 pwnChromiumExtension.montoyaApi.logging().logToOutput("Editing the button name...");
                 uiRenameProfileButtonInline(button);
             } else {
-                String profileColor = button.getName();
-                pwnChromiumExtension.montoyaApi.logging().logToOutput("Launching PwnChromium... profile - " + profileColor);
-                uiStartDetachedPwnChromium(profileColor);
+                pwnChromiumExtension.montoyaApi.logging().logToOutput("Launching PwnChromium...");
+                uiStartDetachedPwnChromium(button);
             }
         };
 
@@ -134,15 +131,23 @@ public class PwnFoxForChromiumUI {
         }
     }
 
-    private void uiStartDetachedPwnChromium(String profileColor) {
+    private void uiStartDetachedPwnChromium(JButton button) {
         if (areSettingsValid()) {
+            String profileColor = button.getName();
+            String profileName = pwnChromiumExtension.pwnChromiumPreferences.getProfileName(profileColor);
+
             String chromiumExePath = pwnChromeExePath.getText();
             String chromiumProfilesPath = pwnChromeProfilesPath.getText();
-            Browser browser = new Browser(chromiumExePath, chromiumProfilesPath, profileColor);
+            Browser browser = new Browser(
+                chromiumExePath, 
+                chromiumProfilesPath,
+                profileColor,
+                profileName 
+            );
             try {
                 Process process = browser.start();
                 pwnChromiumExtension.montoyaApi.logging().logToOutput(
-                        String.format("PwnChromium %s started with PID: %d", profileColor, process.pid())
+                    String.format("PwnChromium %s started with PID: %d", profileColor, process.pid())
                 );
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "An error launching PwnChromium has occurred. Check the extension logs");
