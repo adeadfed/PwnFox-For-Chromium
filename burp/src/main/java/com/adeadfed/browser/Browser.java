@@ -11,7 +11,8 @@ import com.adeadfed.browser_extensions.BrowserExtensionsLoader;
 public class Browser {
     private String exePath;
     private String profilesPath;
-    private String themeColor;
+    private String profileColor;
+    private String profileName;
 
     private final String BROWSER_DATA_PREFIX = "browser-data";
 
@@ -50,10 +51,11 @@ public class Browser {
         "--disable-features=ChromeWhatsNewUI,HttpsUpgrades,ImageServiceObserveSyncDownloadStatus"
     };
 
-    public Browser(String exePath, String profilesPath, String themeColor) {
+    public Browser(String exePath, String profilesPath, String themeColor, String profileName) {
         this.exePath = exePath;
         this.profilesPath = profilesPath;
-        this.themeColor = themeColor;
+        this.profileColor = themeColor;
+        this.profileName = profileName;
     }
 
     public Process start() throws Exception {
@@ -65,15 +67,15 @@ public class Browser {
         return concatAll(
                 new String[] { exePath },
                 PWNCHROME_DEFAULT_ARGS,
-                new String[] { getExtensionsArgs() },
-                new String[] { getProfileArgs() }
+                getProfileArgs(),
+                new String[] { getExtensionsArgs() }
         );
     }
 
     private String getExtensionsArgs() throws IOException {
         BrowserExtensionsLoader browserExtensions = new BrowserExtensionsLoader(
                 profilesPath,
-                ProfileColors.valueOf(themeColor.toUpperCase())
+                ProfileColors.valueOf(profileColor.toUpperCase())
         );
         return "--load-extension=" + String.join(
                 ",",
@@ -83,13 +85,15 @@ public class Browser {
         );
     }
 
-    private String getProfileArgs() throws InvalidPathException {
+    private String[] getProfileArgs() throws InvalidPathException {
         String pwnChromeBrowserDataDir = Paths.get(
                 profilesPath,
                 BROWSER_DATA_PREFIX,
-                themeColor.toLowerCase()
+                profileColor.toLowerCase()
         ).toString();
-        return "--user-data-dir=" + pwnChromeBrowserDataDir;
+        String userDataDirArg = "--user-data-dir=" + pwnChromeBrowserDataDir;
+        String windowNameArg = "--window-name=" + "PwnChromium - " + profileName;
+        return new String[] { userDataDirArg, windowNameArg };
     }
 
     // https://stackoverflow.com/questions/80476/how-can-i-concatenate-two-arrays-in-java
