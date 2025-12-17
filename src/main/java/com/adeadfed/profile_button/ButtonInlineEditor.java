@@ -9,14 +9,19 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 public class ButtonInlineEditor {
+    private JButton button;
     private JTextField textField;
+    private ButtonGridLayout layout;
 
-    public ButtonInlineEditor(JButton source) throws Exception{
-        textField = new JTextField(source.getText());
-        textField.setFont(source.getFont());
-        textField.setForeground(source.getForeground());
-        textField.setBackground(source.getBackground());
-        textField.setBorder(source.getBorder());
+    public ButtonInlineEditor(JButton button) throws Exception {
+        this.button = button;
+        layout = new ButtonGridLayout(button);
+
+        textField = new JTextField(button.getText());
+        textField.setFont(button.getFont());
+        textField.setForeground(button.getForeground());
+        textField.setBackground(button.getBackground());
+        textField.setBorder(button.getBorder());
         textField.setHorizontalAlignment(SwingConstants.CENTER);
 
         SwingUtilities.invokeLater(() -> {
@@ -29,8 +34,16 @@ public class ButtonInlineEditor {
         return textField;
     }
 
-    public void setupCallback(JTextField editor, Runnable callback) {
-        editor.addActionListener(e -> callback.run());
-        editor.addFocusListener(new FocusAdapter() { @Override public void focusLost(FocusEvent e) { callback.run(); } });
+    public void setupCallback(Runnable callback) {
+        textField.addActionListener(e -> callback.run());
+        textField.addFocusListener(new FocusAdapter() { @Override public void focusLost(FocusEvent e) { callback.run(); } });
+    }
+
+    public void startEdit() {
+        layout.swapComponent(button, textField);
+    }
+
+    public void stopEdit() {
+        layout.swapComponent(textField, button);
     }
 }

@@ -151,11 +151,7 @@ public class PwnFoxForChromiumUI {
     private void uiRenameProfileButtonInline(JButton button) {
         try {
             pwnChromiumExtension.montoyaApi.logging().logToOutput("Editing the button name...");
-
-            ButtonGridLayout layout = new ButtonGridLayout(button);
             ButtonInlineEditor editor = new ButtonInlineEditor(button);
-
-            layout.swapComponent(button, editor.getTextField());
 
             Runnable profileRenamedCallback = () -> {
                 String text = editor.getTextField().getText().trim();
@@ -163,10 +159,11 @@ public class PwnFoxForChromiumUI {
                     button.setText(text);
                     pwnChromiumExtension.pwnChromiumPreferences.setProfileName(button.getName(), text);
                 }
-                layout.swapComponent(editor.getTextField(), button);
+                editor.stopEdit();
             };
 
-            editor.setupCallback(editor.getTextField(), profileRenamedCallback);
+            editor.setupCallback(profileRenamedCallback);
+            editor.startEdit();
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "An error editing the profile name has occurred. Check the extension logs");
