@@ -9,21 +9,16 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
 public class ButtonGridLayout {
-    final Container parent;
-    final GridLayoutManager manager;
-    final GridConstraints constraints;
-    
-    ButtonGridLayout(Container p, GridLayoutManager l, GridConstraints c) {
-        parent = p; manager = l; constraints = c;
-    }
+    private Container parent;
+    private GridConstraints constraints;
+   
 
-    public static ButtonGridLayout layoutFrom(JButton button) throws Exception {
-        Container parent = button.getParent();
-        if (parent == null || !(parent.getLayout() instanceof GridLayoutManager g)) {
+    public ButtonGridLayout(JButton button) throws Exception {
+        parent = button.getParent();
+        if (parent == null || !(parent.getLayout() instanceof GridLayoutManager manager)) {
             throw new Exception("Failed to initialize ButtonGridLayout object. No Parent or no GridLayoutManager");
         }
-        GridConstraints gc = g.getConstraintsForComponent(button);
-        return new ButtonGridLayout(parent, g, gc);
+        constraints = manager.getConstraintsForComponent(button);
     }
 
     public void swapComponent(JComponent oldComponent, JComponent newComponent) {

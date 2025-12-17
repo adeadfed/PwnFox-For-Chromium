@@ -70,10 +70,8 @@ public class PwnFoxForChromiumUI {
         ActionListener buttonPressedListener = e -> {
             JButton button = (JButton) e.getSource();
             if (isRenameKeyPressed(e)) {
-                pwnChromiumExtension.montoyaApi.logging().logToOutput("Editing the button name...");
                 uiRenameProfileButtonInline(button);
             } else {
-                pwnChromiumExtension.montoyaApi.logging().logToOutput("Launching PwnChromium...");
                 uiStartDetachedPwnChromium(button);
             }
         };
@@ -109,21 +107,23 @@ public class PwnFoxForChromiumUI {
      */
     private void uiRenameProfileButtonInline(JButton button) {
         try {
-            ButtonGridLayout layout = ButtonGridLayout.layoutFrom(button);
-            JTextField inlineEditor = ButtonInlineEditor.fromButton(button);
+            pwnChromiumExtension.montoyaApi.logging().logToOutput("Editing the button name...");
 
-            layout.swapComponent(button, inlineEditor);
+            ButtonGridLayout layout = new ButtonGridLayout(button);
+            ButtonInlineEditor editor = new ButtonInlineEditor(button);
+
+            layout.swapComponent(button, editor.getTextField());
 
             Runnable profileRenamedCallback = () -> {
-                String text = inlineEditor.getText().trim();
+                String text = editor.getTextField().getText().trim();
                 if (!text.isEmpty()) {
                     button.setText(text);
                     pwnChromiumExtension.pwnChromiumPreferences.setProfileName(button.getName(), text);
                 }
-                layout.swapComponent(inlineEditor, button);
+                layout.swapComponent(editor.getTextField(), button);
             };
 
-            ButtonInlineEditor.setupCallback(inlineEditor, profileRenamedCallback);
+            editor.setupCallback(editor.getTextField(), profileRenamedCallback);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "An error editing the profile name has occurred. Check the extension logs");
@@ -133,6 +133,8 @@ public class PwnFoxForChromiumUI {
 
     private void uiStartDetachedPwnChromium(JButton button) {
         if (areSettingsValid()) {
+            pwnChromiumExtension.montoyaApi.logging().logToOutput("Launching PwnChromium...");
+
             String profileColor = button.getName();
             String profileName = pwnChromiumExtension.pwnChromiumPreferences.getProfileName(profileColor);
 

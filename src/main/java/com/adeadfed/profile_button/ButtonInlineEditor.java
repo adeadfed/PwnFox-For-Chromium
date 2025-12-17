@@ -9,24 +9,27 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 public class ButtonInlineEditor {
+    private JTextField textField;
 
-    public static JTextField fromButton(JButton source) {
-        JTextField editor = new JTextField(source.getText());
-        editor.setFont(source.getFont());
-        editor.setForeground(source.getForeground());
-        editor.setBackground(source.getBackground());
-        editor.setBorder(source.getBorder());
-        editor.setHorizontalAlignment(SwingConstants.CENTER);
+    public ButtonInlineEditor(JButton source) throws Exception{
+        textField = new JTextField(source.getText());
+        textField.setFont(source.getFont());
+        textField.setForeground(source.getForeground());
+        textField.setBackground(source.getBackground());
+        textField.setBorder(source.getBorder());
+        textField.setHorizontalAlignment(SwingConstants.CENTER);
 
         SwingUtilities.invokeLater(() -> {
-                editor.requestFocusInWindow();
-                editor.selectAll();
+                textField.requestFocusInWindow();
+                textField.selectAll();
         });
-        
-        return editor;
     }
 
-    public static void setupCallback(JTextField editor, Runnable callback) {
+    public JTextField getTextField() {
+        return textField;
+    }
+
+    public void setupCallback(JTextField editor, Runnable callback) {
         editor.addActionListener(e -> callback.run());
         editor.addFocusListener(new FocusAdapter() { @Override public void focusLost(FocusEvent e) { callback.run(); } });
     }
