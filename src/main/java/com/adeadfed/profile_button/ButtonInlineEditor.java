@@ -30,8 +30,8 @@ public class ButtonInlineEditor {
         });
     }
 
-    public JTextField getTextField() {
-        return textField;
+    public String getText() {
+        return textField.getText().trim();
     }
 
     public void setupCallback(Runnable callback) {

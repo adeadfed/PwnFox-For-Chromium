@@ -153,14 +153,13 @@ public class PwnFoxForChromiumUI {
             ButtonInlineEditor editor = new ButtonInlineEditor(button);
 
             Runnable profileRenamedCallback = () -> {
-                String text = editor.getTextField().getText().trim();
+                String text = editor.getText();
                 if (!text.isEmpty()) {
                     button.setText(text);
                     pwnChromiumExtension.pwnChromiumPreferences.setProfileName(button.getName(), text);
                 }
                 editor.stopEdit();
             };
-
             editor.setupCallback(profileRenamedCallback);
             editor.startEdit();
 
