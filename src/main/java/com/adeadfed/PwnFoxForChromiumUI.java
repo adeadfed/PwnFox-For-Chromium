@@ -1,7 +1,6 @@
 package com.adeadfed;
 
 import com.adeadfed.preferences.Preference;
-import com.adeadfed.profile_button.ButtonGridLayout;
 import com.adeadfed.profile_button.ButtonInlineEditor;
 import com.adeadfed.common.OsType;
 import com.adeadfed.common.ProfileColors;
