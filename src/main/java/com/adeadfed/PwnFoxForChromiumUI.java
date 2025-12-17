@@ -144,9 +144,6 @@ public class PwnFoxForChromiumUI {
         return (e.getModifiers() & RENAME_KEY_MASK) != 0;
     }
 
-    /**
-     * Replace a JButton with a temporary text field so the label can be edited.
-     */
     private void uiRenameProfileButtonInline(JButton button) {
         try {
             pwnChromiumExtension.montoyaApi.logging().logToOutput("Editing the button name...");
