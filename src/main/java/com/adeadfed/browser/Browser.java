@@ -77,16 +77,6 @@ public class Browser {
     }
 
     private String[] getExeArgs() {
-        if (OsType.isMacOS()) {
-            // this should prevent icons from being treated as separate instances in the dock
-            return new String[] {
-                "open",
-                "-a",
-                exePath,
-                "-n",
-                "--args"
-            };
-        }
         return new String[] { exePath };
     } 
 
