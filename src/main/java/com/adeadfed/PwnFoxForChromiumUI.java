@@ -37,6 +37,10 @@ public class PwnFoxForChromiumUI {
     private JButton orangeButton;
     private JButton pinkButton;
     private JButton magentaButton;
+    private JButton[] profileButtons = {
+        blueButton, cyanButton, greenButton, yellowButton,
+        redButton, orangeButton, pinkButton, magentaButton
+    };
     private JLabel helpLabel;
     private JButton resetProfileNamesButton;
     private JButton locateBurpBrowserButton;
@@ -65,11 +69,6 @@ public class PwnFoxForChromiumUI {
     private void setupResetProfileNamesButton() {
         Runnable resetProfileNamesCallback = () -> {
             try {
-                JButton[] profileButtons = {
-                        blueButton, cyanButton, greenButton, yellowButton,
-                        redButton, orangeButton, pinkButton, magentaButton
-                };
-
                 for (JButton b: profileButtons) {
                     String defaultColorValue = b.getName();
                     b.setText(defaultColorValue);
@@ -104,11 +103,6 @@ public class PwnFoxForChromiumUI {
     }
 
     private void setupProfileButtons() {
-        JButton[] profileButtons = {
-                blueButton, cyanButton, greenButton, yellowButton,
-                redButton, orangeButton, pinkButton, magentaButton
-        };
-
         ActionListener buttonPressedListener = e -> {
             JButton button = (JButton) e.getSource();
             if (isRenameKeyPressed(e)) {
