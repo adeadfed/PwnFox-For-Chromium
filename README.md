@@ -51,7 +51,7 @@ You can use Burp's built-in browser to deploy PwnFox for Chromium. Here are the 
 ## Compiling the extension on your own with Maven
 ```
 git clone https://github.com/adeadfed/PwnFox-For-Chromium
-cd PwnFox-For-Chromium/burp
+cd PwnFox-For-Chromium/
 mvn clean compile assembly:single
 ls -l target/PwnFox-For-Chromium*.jar
 ```
