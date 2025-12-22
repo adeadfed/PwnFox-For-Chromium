@@ -8,13 +8,13 @@ import java.nio.file.Paths;
 
 public class FsValidator {
     public static boolean isDirValid(String directory) {
-        return Files.isDirectory(Paths.get(directory));
+        return directory.length() != 0 && Files.isDirectory(Paths.get(directory));
     }
 
     public static boolean isChromiumExecutableValid(String pwnChromeExePath) {
         // check if executable is named Chrome or Chromium
         String chromeExeName = Paths.get(pwnChromeExePath).getFileName().toString().toLowerCase();
-        if (!(chromeExeName.contains("chrom"))) {
+        if (!chromeExeName.contains("chrom")) {
             return false;
         }
         // check if the --version flag of the chromium executable returns Chrome or Chromium in the output
