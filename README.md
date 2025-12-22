@@ -67,3 +67,12 @@ You can edit Chromium proxy configuration and enable/disable it using the built-
 - All extension settings can be managed in BurpSuite directly
 - Additional options for proxy configuration in the bundled Chromium extensions
 - You can keep unique Chromium data for each engagement by separating the Chromium profile data directories
+
+## Building
+This project depends on the IntelliJ GUI Designer. Make sure you have the latest [Swing UI Designer](https://plugins.jetbrains.com/plugin/25304-swing-ui-designer) plugin installed. 
+
+To build it yourself using Maven: 
+
+1. Ensure IntelliJ is set to "Generate GUI into: Java source code on compilation" (Settings > Editor > GUI Designer).
+2. Run `mvn clean install`.
+3. Load `target/PwnFox-For-Chromium-1.3.2-jar-with-dependencies.jar` into Burp.
