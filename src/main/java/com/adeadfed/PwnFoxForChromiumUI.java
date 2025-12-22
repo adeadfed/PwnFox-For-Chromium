@@ -37,10 +37,6 @@ public class PwnFoxForChromiumUI {
     private JButton orangeButton;
     private JButton pinkButton;
     private JButton magentaButton;
-    private JButton[] profileButtons = {
-        blueButton, cyanButton, greenButton, yellowButton,
-        redButton, orangeButton, pinkButton, magentaButton
-    };
     private JLabel helpLabel;
     private JButton resetProfileNamesButton;
     private JButton locateBurpBrowserButton;
@@ -58,17 +54,33 @@ public class PwnFoxForChromiumUI {
         helpLabel.setText(modifierKey + " + Click to edit button names");
     }
 
-    private void setupPreferenceButton(Preference preference, JButton button, JTextField uiPath, int pathMode) {
-        String path = pwnChromiumExtension.pwnChromiumPreferences.get(preference);
-        if (path != null) {
-            uiPath.setText(path);
+    private void setupUiPathField(Preference preference, JButton button, JTextField uiPath, InputVerifier uiPathInputVerifier, int pathMode) {
+        String savedPath = pwnChromiumExtension.pwnChromiumPreferences.get(preference);
+        if (savedPath != null) {
+            uiPath.setText(savedPath);
         }
+        
+        Runnable saveTextFieldCallback = () -> {
+            if (uiPath.isValid()) {
+                String path = uiPath.getText();
+                pwnChromiumExtension.pwnChromiumPreferences.set(preference, path);
+            }
+        };
+
+        uiPath.setInputVerifier(uiPathInputVerifier);
+        
+        uiPath.addActionListener(e -> saveTextFieldCallback.run());
         button.addActionListener(e -> uiChoosePath(preference, uiPath, pathMode));
     }
 
     private void setupResetProfileNamesButton() {
         Runnable resetProfileNamesCallback = () -> {
             try {
+                JButton[] profileButtons = {
+                    blueButton, cyanButton, greenButton, yellowButton,
+                    redButton, orangeButton, pinkButton, magentaButton
+                };
+
                 for (JButton b: profileButtons) {
                     String defaultColorValue = b.getName();
                     b.setText(defaultColorValue);
@@ -85,15 +97,15 @@ public class PwnFoxForChromiumUI {
     private void setupLocateBurpBrowserButton() {
         Runnable locateBurpBrowserCallback = () -> {
             try {
-                String burpBrowserPath = pwnChromiumExtension.pwnChromiumPreferences.browserPath.getDefault();
-                if (burpBrowserPath == null) {
+                String path = pwnChromiumExtension.pwnChromiumPreferences.browserPath.getDefault();
+                if (path == null) {
                     throw new Exception("Failed to locate BurpBrowser automatically.");
                 }
                 pwnChromiumExtension.pwnChromiumPreferences.set(
                     pwnChromiumExtension.pwnChromiumPreferences.browserPath,
-                    burpBrowserPath
+                    path
                 );
-                pwnChromeExePath.setText(burpBrowserPath);
+                pwnChromeExePath.setText(path);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "An error locating BurpBrowser occured. Check the extension logs");
                 pwnChromiumExtension.montoyaApi.logging().logToError(e);
@@ -103,6 +115,11 @@ public class PwnFoxForChromiumUI {
     }
 
     private void setupProfileButtons() {
+        JButton[] profileButtons = {
+            blueButton, cyanButton, greenButton, yellowButton,
+            redButton, orangeButton, pinkButton, magentaButton
+        };
+
         ActionListener buttonPressedListener = e -> {
             JButton button = (JButton) e.getSource();
             if (isRenameKeyPressed(e)) {
@@ -195,20 +212,19 @@ public class PwnFoxForChromiumUI {
     public PwnFoxForChromiumUI(PwnFoxForChromium pwnChromiumExtension) {
         setPwnChromiumExtension(pwnChromiumExtension);
 
-        pwnChromeExePath.setInputVerifier(new TextFieldVerifier(FsValidator::isChromiumExecutableValid));
-        pwnChromeProfilesPath.setInputVerifier(new TextFieldVerifier(FsValidator::isDirValid));
-       
-        setupPreferenceButton(
+        setupUiPathField(
             pwnChromiumExtension.pwnChromiumPreferences.browserPath,
             chooseExeButton,
             pwnChromeExePath, 
+            new TextFieldVerifier(FsValidator::isChromiumExecutableValid),
             JFileChooser.FILES_ONLY
         );
 
-        setupPreferenceButton(
+        setupUiPathField(
             pwnChromiumExtension.pwnChromiumPreferences.profilesDir,
             chooseProfilesDirButton,
             pwnChromeProfilesPath,
+            new TextFieldVerifier(FsValidator::isDirValid),
             JFileChooser.DIRECTORIES_ONLY
         );
 
