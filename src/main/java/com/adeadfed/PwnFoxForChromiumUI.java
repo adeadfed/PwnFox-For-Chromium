@@ -62,13 +62,12 @@ public class PwnFoxForChromiumUI {
         
         Runnable saveTextFieldCallback = () -> {
             if (uiPath.isValid()) {
-                String path = uiPath.getText();
-                pwnChromiumExtension.pwnChromiumPreferences.set(preference, path);
+                pwnChromiumExtension.pwnChromiumPreferences.set(preference, uiPath.getText());
             }
         };
 
         uiPath.setInputVerifier(uiPathInputVerifier);
-        
+
         uiPath.addActionListener(e -> saveTextFieldCallback.run());
         button.addActionListener(e -> uiChoosePath(preference, uiPath, pathMode));
     }
