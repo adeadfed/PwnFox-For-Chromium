@@ -48,7 +48,9 @@ You can use Burp's built-in browser to deploy PwnFox for Chromium. Here are the 
 /Applications/Burp Suite Community Professional.app/Contents/Resources/app/burpbrowser/{VERSION}/Chromium.app/Contents/MacOS/Chromium
 ```
 
-## Compiling the extension on your own with Maven
+## Building from Sources
+> This project depends on the IntelliJ GUI Designer. Make sure you have the latest [Swing UI Designer](https://plugins.jetbrains.com/plugin/25304-swing-ui-designer) plugin installed if you would like to edit the GUI layout. 
+
 ```
 git clone https://github.com/adeadfed/PwnFox-For-Chromium
 cd PwnFox-For-Chromium/
