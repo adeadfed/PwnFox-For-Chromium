@@ -48,7 +48,9 @@ You can use Burp's built-in browser to deploy PwnFox for Chromium. Here are the 
 /Applications/Burp Suite Community Professional.app/Contents/Resources/app/burpbrowser/{VERSION}/Chromium.app/Contents/MacOS/Chromium
 ```
 
-## Compiling the extension on your own with Maven
+## Building from Sources
+> This project depends on the IntelliJ GUI Designer. Make sure you have the latest [Swing UI Designer](https://plugins.jetbrains.com/plugin/25304-swing-ui-designer) plugin installed if you would like to edit the GUI layout. 
+
 ```
 git clone https://github.com/adeadfed/PwnFox-For-Chromium
 cd PwnFox-For-Chromium/
@@ -67,12 +69,3 @@ You can edit Chromium proxy configuration and enable/disable it using the built-
 - All extension settings can be managed in BurpSuite directly
 - Additional options for proxy configuration in the bundled Chromium extensions
 - You can keep unique Chromium data for each engagement by separating the Chromium profile data directories
-
-## Building
-This project depends on the IntelliJ GUI Designer. Make sure you have the latest [Swing UI Designer](https://plugins.jetbrains.com/plugin/25304-swing-ui-designer) plugin installed. 
-
-To build it yourself using Maven: 
-
-1. Ensure IntelliJ is set to "Generate GUI into: Java source code on compilation" (Settings > Editor > GUI Designer).
-2. Run `mvn clean install`.
-3. Load `target/PwnFox-For-Chromium-1.3.2-jar-with-dependencies.jar` into Burp.
