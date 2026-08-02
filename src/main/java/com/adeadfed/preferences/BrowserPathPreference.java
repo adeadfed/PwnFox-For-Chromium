@@ -6,6 +6,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 public class BrowserPathPreference extends Preference {
     private final String persistentKey = "PWNCHROMIUM_BROWSER_PATH";
@@ -18,7 +19,7 @@ public class BrowserPathPreference extends Preference {
     @Override
     public String getDefault() throws Exception {
         try {
-            String chromiumRegex = "regex:[Cc]hrom(e|ium)(\\.exe)?";
+            String chromiumRegex = "regex:(?i)(chrome|chromium|burp browser)(\\.exe)?";
 
             Path userDirPath = Paths.get(
                     System.getProperty("user.dir"));
@@ -26,13 +27,15 @@ public class BrowserPathPreference extends Preference {
             FileSystem fs = FileSystems.getDefault();
             PathMatcher matcher = fs.getPathMatcher(chromiumRegex);
 
-            Path chromiumPath = Files.walk(userDirPath, 10)
-                    .filter(Files::isRegularFile)
-                    .filter(Files::isExecutable)
-                    .filter(path -> matcher.matches(path.getFileName()))
-                    .findFirst()
-                    .orElse(null);
-            return chromiumPath == null ? null : chromiumPath.toAbsolutePath().toString();
+            try (Stream<Path> paths = Files.walk(userDirPath, 10)) {
+                Path chromiumPath = paths
+                        .filter(Files::isRegularFile)
+                        .filter(Files::isExecutable)
+                        .filter(path -> matcher.matches(path.getFileName()))
+                        .findFirst()
+                        .orElse(null);
+                return chromiumPath == null ? null : chromiumPath.toAbsolutePath().toString();
+            }
         } catch (Exception e) {
             throw new Exception("PwnFox For Chromium - Error getting default browser path", e);
         }
