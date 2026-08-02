@@ -14,6 +14,9 @@ PwnFox For Chromium allows you to:
 You can now rename your profile by Ctrl+Clicking on the button (Command+Click on MacOS).
 ![](readme/profile-renaming.gif)
 
+## Hotfix in 1.3.4
+Fixed automatic discovery and validation for Burp Browser, which replaced Chromium in Burp Suite 2026.7.2. Existing Chrome and Chromium executable paths remain supported.
+
 ## Setup
 1. Download the up-to-date `PwnFox-For-Chromium.jar` from the [Releases](https://github.com/adeadfed/PwnFox-For-Chromium/releases) tab
 2. Import the PwnFox For Chromium JAR into the BurpSuite    
@@ -46,7 +49,11 @@ You can use Burp's built-in browser to deploy PwnFox for Chromium. Here are the 
 ```
 /Applications/Burp Suite Community Edition.app/Contents/Resources/app/burpbrowser/{VERSION}/Chromium.app/Contents/MacOS/Chromium
 /Applications/Burp Suite Community Professional.app/Contents/Resources/app/burpbrowser/{VERSION}/Chromium.app/Contents/MacOS/Chromium
+/Applications/Burp Suite Community Edition.app/Contents/Resources/app/burpbrowser/{VERSION}/Burp Browser.app/Contents/MacOS/Burp Browser
+/Applications/Burp Suite.app/Contents/Resources/app/burpbrowser/{VERSION}/Burp Browser.app/Contents/MacOS/Burp Browser
 ```
+
+Since Burp Suite 2026.7.2, the bundled browser has been renamed from Chromium to Burp Browser.
 
 ## Building from Sources
 > This project depends on the IntelliJ GUI Designer. Make sure you have the latest [Swing UI Designer](https://plugins.jetbrains.com/plugin/25304-swing-ui-designer) plugin installed if you would like to edit the GUI layout. 

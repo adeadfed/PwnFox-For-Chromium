@@ -22,7 +22,7 @@
             </constraints>
             <properties>
               <labelFor value="83512"/>
-              <text value="Path to the Chromium executable"/>
+              <text value="Path to the browser executable"/>
             </properties>
           </component>
           <component id="83512" class="javax.swing.JTextField" binding="pwnChromeExePath">

@@ -19,7 +19,10 @@ public class PwnFoxForChromiumPreferences {
 
     private void initDefaultPreferences() throws Exception {
         if (!preferenceExists(browserPath.getPersistentKey())) {
-            set(browserPath, browserPath.getDefault());
+            String defaultBrowserPath = browserPath.getDefault();
+            if (defaultBrowserPath != null) {
+                set(browserPath, defaultBrowserPath);
+            }
         }
         if (!preferenceExists(profilesDir.getPersistentKey())) {
             set(profilesDir, profilesDir.getDefault());
