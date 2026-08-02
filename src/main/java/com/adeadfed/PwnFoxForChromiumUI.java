@@ -61,7 +61,7 @@ public class PwnFoxForChromiumUI {
         }
         
         Runnable saveTextFieldCallback = () -> {
-            if (uiPath.isValid()) {
+            if (uiPathInputVerifier.verify(uiPath)) {
                 pwnChromiumExtension.pwnChromiumPreferences.set(preference, uiPath.getText());
             }
         };
@@ -140,8 +140,10 @@ public class PwnFoxForChromiumUI {
         int result = fileChooser.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
             String path = fileChooser.getSelectedFile().getAbsolutePath();
-            pwnChromiumExtension.pwnChromiumPreferences.set(preference, path);
             uiPath.setText(path);
+            if (uiPath.getInputVerifier().verify(uiPath)) {
+                pwnChromiumExtension.pwnChromiumPreferences.set(preference, path);
+            }
         } else {
             JOptionPane.showMessageDialog(null, "Nothing selected!");
         }
@@ -256,7 +258,7 @@ public class PwnFoxForChromiumUI {
         settingsPanel.setLayout(new GridLayoutManager(6, 4, new Insets(20, 0, 0, 0), -1, -1));
         ui.add(settingsPanel, new GridConstraints(4, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JLabel label1 = new JLabel();
-        label1.setText("Path to the Chromium executable");
+        label1.setText("Path to the browser executable");
         settingsPanel.add(label1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         pwnChromeExePath = new JTextField();
         pwnChromeExePath.setEditable(true);
