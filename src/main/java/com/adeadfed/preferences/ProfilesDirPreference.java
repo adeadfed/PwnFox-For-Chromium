@@ -17,7 +17,7 @@ public class ProfilesDirPreference extends Preference {
         try {
             Path profileDirPath = Paths.get(
                     System.getProperty("user.home"),
-                    ".PwnChromiumData");
+                    ".local/share/pwnfoxforchromium");
         
             if (!Files.exists(profileDirPath)) {
                 Files.createDirectory(profileDirPath);
