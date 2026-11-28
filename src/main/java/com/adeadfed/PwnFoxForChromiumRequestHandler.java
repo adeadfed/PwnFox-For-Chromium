@@ -18,11 +18,11 @@ public class PwnFoxForChromiumRequestHandler implements ProxyRequestHandler {
                     HighlightColor.highlightColor(tabColor)
             );
         }
-        return null;
+        return ProxyRequestReceivedAction.continueWith(interceptedRequest);
     }
 
     @Override
     public ProxyRequestToBeSentAction handleRequestToBeSent(InterceptedRequest interceptedRequest) {
-        return null;
+        return ProxyRequestToBeSentAction.continueWith(interceptedRequest);
     }
 }
