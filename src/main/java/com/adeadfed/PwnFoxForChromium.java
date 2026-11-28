@@ -36,5 +36,10 @@ public class PwnFoxForChromium implements BurpExtension {
             new PwnFoxForChromiumRequestHandler()
         );
         montoyaApi.logging().logToOutput("PwnFox For Chromium - Request Interceptor loaded...");
+
+        montoyaApi.proxy().registerWebSocketCreationHandler(
+            new PwnFoxForChromiumWebSocketCreationHandler()
+        );
+        montoyaApi.logging().logToOutput("PwnFox For Chromium - WebSocket Interceptor loaded...");
     }
 }
