@@ -4,23 +4,25 @@ PwnFox For Chromium allows you to:
 - Set up Chromium to fully work with BurpSuite's proxy in a couple of clicks
 - Launch Chromium directly from BurpSuite 
 - Manage 8 separate Chromium user profiles for the ease of multi-account testing
-- Clearly distinguish between user profiles through unique Chromium themes and color-coded HTTP traffic in the Proxy tab
+- Clearly distinguish between user profiles through unique Chromium themes and color-coded HTTP and WebSocket traffic in the Proxy tab
+- Rename profiles to keep track of which account is logged in where
 - Extension settings persist between different sessions and only have to be configured once
 - Works on Unix, MacOS and Windows
 
 ![](readme/demo.gif)
 
-## New in 1.3.0!
-You can now rename your profile by Ctrl+Clicking on the button (Command+Click on MacOS).
-![](readme/profile-renaming.gif)
-
-## Hotfix in 1.3.4
-Fixed automatic discovery and validation for Burp Browser, which replaced Chromium in Burp Suite 2026.7.2. Existing Chrome and Chromium executable paths remain supported.
+## New in 1.4.0!
+WebSocket annotations: WebSocket messages are now color-coded in the Proxy > WebSockets history tab, using the color of the profile that opened the connection.
+![](readme/websocket_annotations.png)
 
 ## Setup
 1. Download the up-to-date `PwnFox-For-Chromium.jar` from the [Releases](https://github.com/adeadfed/PwnFox-For-Chromium/releases) tab
 2. Import the PwnFox For Chromium JAR into the BurpSuite    
 3. Launch the configured Chromium right from the extension tab in your BurpSuite and enjoy!
+
+## Renaming profiles
+You can rename a profile by Ctrl+Clicking on its button (Command+Click on MacOS).
+![](readme/profile-renaming.gif)
 
 ## Optional configuration
 v1.2.0 release of PwnFox For Chromium automatically prepopulates the default settings when the extension is loaded, so you don't have to manually configure anything anymore. However, if you wish to tweak the settings or something has failed, these settings must be set at the bottom of the extension tab:
@@ -53,7 +55,7 @@ You can use Burp's built-in browser to deploy PwnFox for Chromium. Here are the 
 /Applications/Burp Suite.app/Contents/Resources/app/burpbrowser/{VERSION}/Burp Browser.app/Contents/MacOS/Burp Browser
 ```
 
-Since Burp Suite 2026.7.2, the bundled browser has been renamed from Chromium to Burp Browser.
+Since Burp Suite 2026.7.2, the bundled browser has been renamed from Chromium to Burp Browser. PwnFox For Chromium automatically discovers and validates both Burp Browser and the older Chrome/Chromium executable paths.
 
 ## Building from Sources
 > This project depends on the IntelliJ GUI Designer. Make sure you have the latest [Swing UI Designer](https://plugins.jetbrains.com/plugin/25304-swing-ui-designer) plugin installed if you would like to edit the GUI layout. 
@@ -72,7 +74,7 @@ You can edit Chromium proxy configuration and enable/disable it using the built-
 ## Why this instead of [autochrome](https://github.com/nccgroup/autochrome)?
 - PwnFox For Chromium is a one-click, ready-to-use solution after installation! Every dependency is embedded into the JAR file
 - You don't need to download a separate Chromium browser for this extension. You can reuse the already existing Chrome/Chromium installation on your PC, or, even better, use the Chromium bundled with BurpSuite!
-- The traffic will be color-coded in the Proxy tab exactly like in the [PwnFox](https://github.com/yeswehack/PwnFox) BurpSuite plugin
+- HTTP and WebSocket traffic will be color-coded in the Proxy tab exactly like in the [PwnFox](https://github.com/yeswehack/PwnFox) BurpSuite plugin
 - All extension settings can be managed in BurpSuite directly
 - Additional options for proxy configuration in the bundled Chromium extensions
 - You can keep unique Chromium data for each engagement by separating the Chromium profile data directories
